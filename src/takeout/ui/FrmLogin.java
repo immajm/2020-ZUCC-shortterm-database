@@ -22,6 +22,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import takeout.TakeoutAssistantUtil;
+import takeout.control.UserManager;
+import takeout.model.BeanAdmin;
 import takeout.model.BeanUser;
 import takeout.util.BaseException;
 
@@ -32,7 +34,7 @@ public class FrmLogin extends JDialog implements ActionListener {
 	private JButton btnCancel = new JButton("退出");
 	private JButton btnRegister = new JButton("注册");
 
-	private JLabel labelUser = new JLabel("用户：");
+	private JLabel labelUser = new JLabel("用户id：");
 	private JLabel labelPwd = new JLabel("密码：");
 	private JLabel labelwho = new JLabel("选择身份：");
 	private JTextField edtUserId = new JTextField(20);
@@ -77,7 +79,7 @@ public class FrmLogin extends JDialog implements ActionListener {
 		comboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange()==ItemEvent.SELECTED) {
-					System.out.println(comboBox.getSelectedIndex()+ "=" +comboBox.getSelectedItem().toString());
+					//System.out.println(comboBox.getSelectedIndex()+ "=" +comboBox.getSelectedItem().toString());
 				}
 			}
 		});
@@ -86,22 +88,60 @@ public class FrmLogin extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.btnLogin) {
+			UserManager sum=new UserManager();
+			BeanUser user=new BeanUser();
 			String userid=this.edtUserId.getText();
 			String pwd=new String(this.edtPwd.getPassword());
+			/*1管理员2商家3客户4骑手*/
 			try {
-				BeanUser.currentLoginUser= TakeoutAssistantUtil.userManager.login(userid, pwd);
-			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			this.setVisible(false);
+				if("管理员".equals(comboBox.getSelectedItem().toString())) {
+					user=sum.loadUser(1,userid);
+					if(pwd.equals(user.getPwd())){
+						UserManager.currentUser=user;
+						setVisible(false);
+					}
+					else{
+						JOptionPane.showMessageDialog(null,  "密码错误","错误提示",JOptionPane.ERROR_MESSAGE);
+					}
+				}else if("商家".equals(comboBox.getSelectedItem().toString())) {
+					user=sum.loadUser(2,userid);
+					if(pwd.equals(user.getPwd())){
+						UserManager.currentUser=user;
+						setVisible(false);
+					}
+					else{
+						JOptionPane.showMessageDialog(null,  "密码错误","错误提示",JOptionPane.ERROR_MESSAGE);
+					}
+				}else if("顾客".equals(comboBox.getSelectedItem().toString())){
+					user=sum.loadUser(3,userid);
+					if(pwd.equals(user.getPwd())){
+						UserManager.currentUser=user;
+						setVisible(false);
+					}
+					else{
+						JOptionPane.showMessageDialog(null,  "密码错误","错误提示",JOptionPane.ERROR_MESSAGE);
+					}
+				}else if("骑手".equals(comboBox.getSelectedItem().toString())){
+					user=sum.loadUser(4,userid);
+					if(pwd.equals(user.getPwd())){
+						UserManager.currentUser=user;
+						setVisible(false);
+					}
+					else{
+						JOptionPane.showMessageDialog(null,  "密码错误","错误提示",JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			
+			} catch (BaseException e1) {
+				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误提示",JOptionPane.ERROR_MESSAGE);
+			}
 		} else if (e.getSource() == this.btnCancel) {
 			System.exit(0);
 		} else if(e.getSource()==this.btnRegister){
 			FrmRegister dlg=new FrmRegister(this,"注册",true);
 			dlg.setVisible(true);
 		}
+		
 	}
 	
 

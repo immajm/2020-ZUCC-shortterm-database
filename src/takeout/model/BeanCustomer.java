@@ -3,7 +3,7 @@ package takeout.model;
 import java.sql.Date;
 
 public class BeanCustomer {
-	private int cus_id;
+	private String cus_id;
 	private String cus_name;
 	private String sex;
 	private String cus_pwd;
@@ -13,10 +13,11 @@ public class BeanCustomer {
 	private Date reg_time;
 	private String vip_state;
 	private Date vip_endtime;
-	public int getCus_id() {
+	
+	public String getCus_id() {
 		return cus_id;
 	}
-	public void setCus_id(int cus_id) {
+	public void setCus_id(String cus_id) {
 		this.cus_id = cus_id;
 	}
 	public String getCus_name() {

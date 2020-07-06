@@ -23,115 +23,56 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import takeout.ui.*;
 import takeout.control.UserManager;
-import takeout.model.BeanUser;
+import takeout.ui.*;
+
 
 
 public class FrmMain extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	private JMenuBar menubar=new JMenuBar(); ;
+	private JMenuBar menubar_admin=new JMenuBar(); 
+	private JMenuBar menubar_shop=new JMenuBar(); 
+	private JMenuBar menubar_cus=new JMenuBar(); 
+	private JMenuBar menubar_rider=new JMenuBar(); 
+	
+	//管理员
     private JMenu menu_cus=new JMenu("顾客管理");
     private JMenu menu_shop=new JMenu("商家管理");
     private JMenu menu_rider=new JMenu("骑手管理");
-    private JMenu menu_pro=new JMenu("产品管理");
     private JMenu menu_order=new JMenu("订单管理");
-   // private JMenu menu_more=new JMenu("更多");
-    
+   // 商家
+    private JMenu menu_productlist=new JMenu("商品列表");
+    //顾客
+    private JMenu menu_menu=new JMenu("菜单");
+    //骑手
+    private JMenu menu_spareorder=new JMenu("可接订单");
+    ////************/////
+    //1
     private JMenuItem  menuItem_AddCus=new JMenuItem("添加顾客");
     private JMenuItem  menuItem_DeleteCus=new JMenuItem("删除顾客");
-    
     private JMenuItem  menuItem_AddShop=new JMenuItem("添加商家");
     private JMenuItem  menuItem_DeleteShop=new JMenuItem("删除商家");
-    
     private JMenuItem  menuItem_AddRider=new JMenuItem("添加骑手");
     private JMenuItem  menuItem_DeleteRider=new JMenuItem("删除骑手");
-    
-    private JMenuItem  menuItem_AddPro=new JMenuItem("添加产品");
-    private JMenuItem  menuItem_finishPro=new JMenuItem("删除产品");
-    
     private JMenuItem  menuItem_AddOrder=new JMenuItem("添加订单");
     private JMenuItem  menuItem_DeleteOrder=new JMenuItem("删除订单");
+    //2
+    private JMenuItem  menuItem_AddPro=new JMenuItem("添加订单");
+    private JMenuItem  menuItem_DeletePro=new JMenuItem("删除订单");
+    //3
+    private JMenuItem  menuItem_buy=new JMenuItem("下单");
+    //4
+    private JMenuItem  menuItem_takeorder=new JMenuItem("接单");
     
     /*
     private JMenuItem  menuItem_modifyPwd=new JMenuItem("密码修改");
     private JMenuItem  menuItem_static1=new JMenuItem("统计1");
     private JMenuItem  menuItem_register=new JMenuItem("注册");
     */
-   
+
 	private FrmLogin dlgLogin=null;
 	private JPanel statusBar = new JPanel();
-	 /*
-	private Object tblPlanTitle[]=BeanPlan.tableTitles;
-	private Object tblPlanData[][];
-	DefaultTableModel tabPlanModel=new DefaultTableModel();
-	private JTable dataTablePlan=new JTable(tabPlanModel);
 	
-	
-	private Object tblStepTitle[]=BeanStep.tblStepTitle;
-	private Object tblStepData[][];
-	DefaultTableModel tabStepModel=new DefaultTableModel();
-	private JTable dataTableStep=new JTable(tabStepModel);
-	
-	private BeanPlan curPlan=null;
-	List<BeanPlan> allPlan=null;
-	List<BeanStep> planSteps=null;
-	private void reloadPlanTable(){//这是测试数据，需要用实际数替换
-		try {
-			allPlan=PersonPlanUtil.planManager.loadAll();
-		} catch (BaseException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		tblPlanData =  new String[allPlan.size()][BeanPlan.tableTitles.length];
-		for(int i=0;i<allPlan.size();i++){
-			for(int j=0;j<BeanPlan.tableTitles.length;j++)
-				tblPlanData[i][j]=getCell1(allPlan,i,j);
-		}
-		tabPlanModel.setDataVector(tblPlanData,tblPlanTitle);
-		this.dataTablePlan.validate();
-		this.dataTablePlan.repaint();
-	}
-	public String getCell1(List<BeanPlan> allPlan,int row,int col){
-		BeanPlan bp=new BeanPlan();
-		bp=allPlan.get(row);
-		if(col==0) return String.valueOf(bp.getPlan_id());
-		else if(col==1) return bp.getPlan_name();
-		else if(col==2) return String.valueOf(bp.getStep_count());
-		else if(col==3) return String.valueOf(bp.getStart_step_count());
-		else return "";
-	}
-	private void reloadPlanStepTabel(int planIdx){
-		if(planIdx<0) return;
-		curPlan=allPlan.get(planIdx);
-		try {
-			planSteps=PersonPlanUtil.stepManager.loadSteps(curPlan);
-		} catch (BaseException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		tblStepData =new String[planSteps.size()][BeanStep.tblStepTitle.length];
-		for(int i=0;i<planSteps.size();i++){
-			for(int j=0;j<BeanStep.tblStepTitle.length;j++)
-				tblStepData[i][j]=getCell(planSteps,i,j);
-		}
-		
-		tabStepModel.setDataVector(tblStepData,tblStepTitle);
-		this.dataTableStep.validate();
-		this.dataTableStep.repaint();
-	}
-	public String getCell(List<BeanStep> planSteps,int row,int col){
-		BeanStep bs=new BeanStep();
-		bs=planSteps.get(row);
-		if(col==0) return String.valueOf(bs.getStep_id());
-		else if(col==1) return bs.getStep_name();
-		else if(col==2) return String.valueOf(bs.getPlan_begin_time());
-		else if(col==3) return String.valueOf(bs.getPlan_end_time());
-		else if(col==4) return String.valueOf(bs.getReal_begin_time());
-		else if(col==5) return String.valueOf(bs.getReal_end_time());
-		else return "";
-
-	}*/
 	public FrmMain(){
 		
 		this.setExtendedState(Frame.MAXIMIZED_BOTH);//全屏显示
@@ -139,30 +80,34 @@ public class FrmMain extends JFrame implements ActionListener {
 		dlgLogin=new FrmLogin(this,"登陆",true);
 		dlgLogin.setVisible(true);
 	    //菜单
-		//System.out.println(UserManager.currentUser.getUser_id());
-		//BeanUser.currentLoginUser.getUser_id()
-		//if("管理员".equals(UserManager.currentUser.getUser_id())){
+		if("管理员".equals(UserManager.currentUser.getType())){
 			this.menu_cus.add(this.menuItem_AddCus); this.menuItem_AddCus.addActionListener(this);
 		    this.menu_cus.add(this.menuItem_DeleteCus); this.menuItem_DeleteCus.addActionListener(this);
 		    this.menu_shop.add(this.menuItem_AddShop); this.menuItem_AddShop.addActionListener(this);
 		    this.menu_shop.add(this.menuItem_DeleteShop); this.menuItem_DeleteShop.addActionListener(this);
 		    this.menu_rider.add(this.menuItem_AddRider); this.menuItem_AddRider.addActionListener(this);
 		    this.menu_rider.add(this.menuItem_DeleteRider); this.menuItem_DeleteRider.addActionListener(this);
-		    this.menu_pro.add(this.menuItem_AddPro); this.menuItem_AddPro.addActionListener(this);
-		    this.menu_pro.add(this.menuItem_finishPro); this.menuItem_finishPro.addActionListener(this);
 		    this.menu_order.add(this.menuItem_AddOrder); this.menuItem_AddOrder.addActionListener(this);
 		    this.menu_order.add(this.menuItem_DeleteOrder); this.menuItem_DeleteOrder.addActionListener(this);
-		   
-		    menubar.add(menu_cus);
-		    menubar.add(menu_shop);
-		    menubar.add(menu_rider);
-		    menubar.add(menu_pro);
-		    menubar.add(menu_order);
-		    this.setJMenuBar(menubar);
-		    
-	//	}
-    
-	    
+		    menubar_admin.add(menu_cus);
+		    menubar_admin.add(menu_shop);
+		    menubar_admin.add(menu_rider);
+		    menubar_admin.add(menu_order);
+		    this.setJMenuBar(menubar_admin);
+		}else if("商家".equals(UserManager.currentUser.getType())) {
+			 this.menu_productlist.add(this.menuItem_AddPro); this.menuItem_AddPro.addActionListener(this);
+			 this.menu_productlist.add(this.menuItem_DeletePro); this.menuItem_DeletePro.addActionListener(this);
+			 menubar_shop.add(menu_productlist);
+			 this.setJMenuBar(menubar_shop);
+		}else if("顾客".equals(UserManager.currentUser.getType())) {
+			this.menu_menu.add(this.menuItem_buy); this.menuItem_buy.addActionListener(this);
+			menubar_cus.add(menu_menu);
+			this.setJMenuBar(menubar_cus);
+		}else if("骑手".equals(UserManager.currentUser.getType())) {
+			this.menu_spareorder.add(this.menuItem_takeorder); this.menuItem_takeorder.addActionListener(this);
+			menubar_rider.add(menu_spareorder);
+			this.setJMenuBar(menubar_rider);
+		}
 	   /* this.getContentPane().add(new JScrollPane(this.dataTablePlan), BorderLayout.WEST);
 	    this.dataTablePlan.addMouseListener(new MouseAdapter (){
 
@@ -185,7 +130,7 @@ public class FrmMain extends JFrame implements ActionListener {
 	  
 	    //状态栏
 	    statusBar.setLayout(new FlowLayout(FlowLayout.LEFT));
-	    JLabel label=new JLabel("您好!"+BeanUser.currentLoginUser.getUser_id());//修改成   您好！+登陆用户名
+	    JLabel label=new JLabel("您好!");//修改成   您好！+登陆用户名+BeanUser.currentLoginUser.getUser_id()
 	    statusBar.add(label);
 	    this.getContentPane().add(statusBar,BorderLayout.SOUTH);
 	    this.addWindowListener(new WindowAdapter(){   
@@ -321,3 +266,74 @@ public class FrmMain extends JFrame implements ActionListener {
 		
 	}
 }
+/*中间设置UI界面拿出来的
+	private Object tblPlanTitle[]=BeanPlan.tableTitles;
+	private Object tblPlanData[][];
+	DefaultTableModel tabPlanModel=new DefaultTableModel();
+	private JTable dataTablePlan=new JTable(tabPlanModel);
+	
+	
+	private Object tblStepTitle[]=BeanStep.tblStepTitle;
+	private Object tblStepData[][];
+	DefaultTableModel tabStepModel=new DefaultTableModel();
+	private JTable dataTableStep=new JTable(tabStepModel);
+	
+	private BeanPlan curPlan=null;
+	List<BeanPlan> allPlan=null;
+	List<BeanStep> planSteps=null;
+	private void reloadPlanTable(){//这是测试数据，需要用实际数替换
+		try {
+			allPlan=PersonPlanUtil.planManager.loadAll();
+		} catch (BaseException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		tblPlanData =  new String[allPlan.size()][BeanPlan.tableTitles.length];
+		for(int i=0;i<allPlan.size();i++){
+			for(int j=0;j<BeanPlan.tableTitles.length;j++)
+				tblPlanData[i][j]=getCell1(allPlan,i,j);
+		}
+		tabPlanModel.setDataVector(tblPlanData,tblPlanTitle);
+		this.dataTablePlan.validate();
+		this.dataTablePlan.repaint();
+	}
+	public String getCell1(List<BeanPlan> allPlan,int row,int col){
+		BeanPlan bp=new BeanPlan();
+		bp=allPlan.get(row);
+		if(col==0) return String.valueOf(bp.getPlan_id());
+		else if(col==1) return bp.getPlan_name();
+		else if(col==2) return String.valueOf(bp.getStep_count());
+		else if(col==3) return String.valueOf(bp.getStart_step_count());
+		else return "";
+	}
+	private void reloadPlanStepTabel(int planIdx){
+		if(planIdx<0) return;
+		curPlan=allPlan.get(planIdx);
+		try {
+			planSteps=PersonPlanUtil.stepManager.loadSteps(curPlan);
+		} catch (BaseException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		tblStepData =new String[planSteps.size()][BeanStep.tblStepTitle.length];
+		for(int i=0;i<planSteps.size();i++){
+			for(int j=0;j<BeanStep.tblStepTitle.length;j++)
+				tblStepData[i][j]=getCell(planSteps,i,j);
+		}
+		
+		tabStepModel.setDataVector(tblStepData,tblStepTitle);
+		this.dataTableStep.validate();
+		this.dataTableStep.repaint();
+	}
+	public String getCell(List<BeanStep> planSteps,int row,int col){
+		BeanStep bs=new BeanStep();
+		bs=planSteps.get(row);
+		if(col==0) return String.valueOf(bs.getStep_id());
+		else if(col==1) return bs.getStep_name();
+		else if(col==2) return String.valueOf(bs.getPlan_begin_time());
+		else if(col==3) return String.valueOf(bs.getPlan_end_time());
+		else if(col==4) return String.valueOf(bs.getReal_begin_time());
+		else if(col==5) return String.valueOf(bs.getReal_end_time());
+		else return "";
+
+	}*/

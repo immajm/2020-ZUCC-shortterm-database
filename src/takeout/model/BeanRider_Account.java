@@ -3,36 +3,42 @@ package takeout.model;
 import java.sql.Date;
 
 public class BeanRider_Account {
-	private int rider_id;
-	private String rider_name;
-	private Date entry_date;
-	private String position;
-	
-	
-	public int getRider_id() {
+	private String order_id;
+	private String rider_id;
+	private Date recordtime;
+	private String rider_evaluate;
+	private double income;
+	public String getOrder_id() {
+		return order_id;
+	}
+	public void setOrder_id(String order_id) {
+		this.order_id = order_id;
+	}
+	public String getRider_id() {
 		return rider_id;
 	}
-	public void setRider_id(int rider_id) {
+	public void setRider_id(String rider_id) {
 		this.rider_id = rider_id;
 	}
-	public String getRider_name() {
-		return rider_name;
+	public Date getRecordtime() {
+		return recordtime;
 	}
-	public void setRider_name(String rider_name) {
-		this.rider_name = rider_name;
+	public void setRecordtime(Date recordtime) {
+		this.recordtime = recordtime;
 	}
-	public Date getEntry_date() {
-		return entry_date;
+	public String getRider_evaluate() {
+		return rider_evaluate;
 	}
-	public void setEntry_date(Date entry_date) {
-		this.entry_date = entry_date;
+	public void setRider_evaluate(String rider_evaluate) {
+		this.rider_evaluate = rider_evaluate;
 	}
-	public String getPosition() {
-		return position;
+	public double getIncome() {
+		return income;
 	}
-	public void setPosition(String position) {
-		this.position = position;
+	public void setIncome(double income) {
+		this.income = income;
 	}
+	
 	
 	
 }
