@@ -22,14 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-/*
-import cn.edu.zucc.personplan.PersonPlanUtil;
-import cn.edu.zucc.personplan.model.BeanPlan;
-import cn.edu.zucc.personplan.model.BeanStep;
-import cn.edu.zucc.personplan.model.BeanUser;
-import cn.edu.zucc.personplan.util.BaseException;
-*/
 
+import takeout.ui.*;
+import takeout.control.UserManager;
 import takeout.model.BeanUser;
 
 
@@ -139,31 +134,34 @@ public class FrmMain extends JFrame implements ActionListener {
 	}*/
 	public FrmMain(){
 		
-		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		this.setExtendedState(Frame.MAXIMIZED_BOTH);//全屏显示
 		this.setTitle("外卖助手管理系统");
 		dlgLogin=new FrmLogin(this,"登陆",true);
 		dlgLogin.setVisible(true);
 	    //菜单
-  
+		//System.out.println(UserManager.currentUser.getUser_id());
+		//BeanUser.currentLoginUser.getUser_id()
+		//if("管理员".equals(UserManager.currentUser.getUser_id())){
+			this.menu_cus.add(this.menuItem_AddCus); this.menuItem_AddCus.addActionListener(this);
+		    this.menu_cus.add(this.menuItem_DeleteCus); this.menuItem_DeleteCus.addActionListener(this);
+		    this.menu_shop.add(this.menuItem_AddShop); this.menuItem_AddShop.addActionListener(this);
+		    this.menu_shop.add(this.menuItem_DeleteShop); this.menuItem_DeleteShop.addActionListener(this);
+		    this.menu_rider.add(this.menuItem_AddRider); this.menuItem_AddRider.addActionListener(this);
+		    this.menu_rider.add(this.menuItem_DeleteRider); this.menuItem_DeleteRider.addActionListener(this);
+		    this.menu_pro.add(this.menuItem_AddPro); this.menuItem_AddPro.addActionListener(this);
+		    this.menu_pro.add(this.menuItem_finishPro); this.menuItem_finishPro.addActionListener(this);
+		    this.menu_order.add(this.menuItem_AddOrder); this.menuItem_AddOrder.addActionListener(this);
+		    this.menu_order.add(this.menuItem_DeleteOrder); this.menuItem_DeleteOrder.addActionListener(this);
+		   
+		    menubar.add(menu_cus);
+		    menubar.add(menu_shop);
+		    menubar.add(menu_rider);
+		    menubar.add(menu_pro);
+		    menubar.add(menu_order);
+		    this.setJMenuBar(menubar);
+		    
+	//	}
     
-	    this.menu_cus.add(this.menuItem_AddCus); this.menuItem_AddCus.addActionListener(this);
-	    this.menu_cus.add(this.menuItem_DeleteCus); this.menuItem_DeleteCus.addActionListener(this);
-	    this.menu_shop.add(this.menuItem_AddShop); this.menuItem_AddShop.addActionListener(this);
-	    this.menu_shop.add(this.menuItem_DeleteShop); this.menuItem_DeleteShop.addActionListener(this);
-	    this.menu_rider.add(this.menuItem_AddRider); this.menuItem_AddRider.addActionListener(this);
-	    this.menu_rider.add(this.menuItem_DeleteRider); this.menuItem_DeleteRider.addActionListener(this);
-	    this.menu_pro.add(this.menuItem_AddPro); this.menuItem_AddPro.addActionListener(this);
-	    this.menu_pro.add(this.menuItem_finishPro); this.menuItem_finishPro.addActionListener(this);
-	    this.menu_order.add(this.menuItem_AddOrder); this.menuItem_AddOrder.addActionListener(this);
-	    this.menu_order.add(this.menuItem_DeleteOrder); this.menuItem_DeleteOrder.addActionListener(this);
-	   
-	    
-	    menubar.add(menu_cus);
-	    menubar.add(menu_shop);
-	    menubar.add(menu_rider);
-	    menubar.add(menu_pro);
-	    menubar.add(menu_order);
-	    this.setJMenuBar(menubar);
 	    
 	   /* this.getContentPane().add(new JScrollPane(this.dataTablePlan), BorderLayout.WEST);
 	    this.dataTablePlan.addMouseListener(new MouseAdapter (){

@@ -3,6 +3,7 @@ package takeout.control;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+
 import takeout.itf.IUserManager;
 import takeout.model.BeanUser;
 import takeout.util.BaseException;
@@ -11,6 +12,7 @@ import takeout.util.DBUtil;
 import takeout.util.DbException;
 
 public class UserManager implements IUserManager {
+	public static BeanUser currentUser=null;
 	public BeanUser reg(String userid, String pwd,String pwd2) throws BaseException {
 		Connection conn=null;
 		BeanUser bu=new BeanUser();
