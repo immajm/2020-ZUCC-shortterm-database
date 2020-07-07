@@ -1,29 +1,23 @@
 package takeout.model;
 
 public class BeanProduct {
-	private int pro_id;
-	private int pro_type_id;
-	private int type_id;
+	private String pro_id;
+	private String type_id;
 	private String pro_name;
 	private double pro_price;
 	private double pro_discount_amount;
 	
-	public int getPro_id() {
+	
+	public String getPro_id() {
 		return pro_id;
 	}
-	public void setPro_id(int pro_id) {
+	public void setPro_id(String pro_id) {
 		this.pro_id = pro_id;
 	}
-	public int getPro_type_id() {
-		return pro_type_id;
-	}
-	public void setPro_type_id(int pro_type_id) {
-		this.pro_type_id = pro_type_id;
-	}
-	public int getType_id() {
+	public String getType_id() {
 		return type_id;
 	}
-	public void setType_id(int type_id) {
+	public void setType_id(String type_id) {
 		this.type_id = type_id;
 	}
 	public String getPro_name() {

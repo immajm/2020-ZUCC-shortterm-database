@@ -23,8 +23,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+
 import takeout.control.UserManager;
 import takeout.ui.*;
+import takeout.util.BaseException;
 
 
 
@@ -41,7 +43,10 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenu menu_rider=new JMenu("骑手管理");
     private JMenu menu_order=new JMenu("订单管理");
    // 商家
-    private JMenu menu_productlist=new JMenu("商品列表");
+    private JMenu menu_product=new JMenu("商品管理");
+    private JMenu menu_full=new JMenu("满减活动");
+    private JMenu menu_coupon=new JMenu("优惠券");
+    private JMenu menu_checkorder=new JMenu("订单查看");
     //顾客
     private JMenu menu_menu=new JMenu("菜单");
     //骑手
@@ -57,8 +62,7 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenuItem  menuItem_AddOrder=new JMenuItem("添加订单");
     private JMenuItem  menuItem_DeleteOrder=new JMenuItem("删除订单");
     //2
-    private JMenuItem  menuItem_AddPro=new JMenuItem("添加订单");
-    private JMenuItem  menuItem_DeletePro=new JMenuItem("删除订单");
+    
     //3
     private JMenuItem  menuItem_buy=new JMenuItem("下单");
     //4
@@ -95,9 +99,14 @@ public class FrmMain extends JFrame implements ActionListener {
 		    menubar_admin.add(menu_order);
 		    this.setJMenuBar(menubar_admin);
 		}else if("商家".equals(UserManager.currentUser.getType())) {
-			 this.menu_productlist.add(this.menuItem_AddPro); this.menuItem_AddPro.addActionListener(this);
-			 this.menu_productlist.add(this.menuItem_DeletePro); this.menuItem_DeletePro.addActionListener(this);
-			 menubar_shop.add(menu_productlist);
+			this.menu_product.addActionListener(this);
+			this.menu_full.addActionListener(this);
+			this.menu_coupon.addActionListener(this);
+			this.menu_checkorder.addActionListener(this);
+			 menubar_shop.add(menu_product);
+			 menubar_shop.add(menu_full);
+			 menubar_shop.add(menu_coupon);
+			 menubar_shop.add(menu_checkorder);
 			 this.setJMenuBar(menubar_shop);
 		}else if("顾客".equals(UserManager.currentUser.getType())) {
 			this.menu_menu.add(this.menuItem_buy); this.menuItem_buy.addActionListener(this);
@@ -130,7 +139,7 @@ public class FrmMain extends JFrame implements ActionListener {
 	  
 	    //状态栏
 	    statusBar.setLayout(new FlowLayout(FlowLayout.LEFT));
-	    JLabel label=new JLabel("您好!");//修改成   您好！+登陆用户名+BeanUser.currentLoginUser.getUser_id()
+	    JLabel label=new JLabel("您好!"+UserManager.currentUser.getUser_id());
 	    statusBar.add(label);
 	    this.getContentPane().add(statusBar,BorderLayout.SOUTH);
 	    this.addWindowListener(new WindowAdapter(){   
@@ -142,54 +151,26 @@ public class FrmMain extends JFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		/*if(e.getSource()==this.menuItem_AddCus){
-			FrmAddPlan dlg=new FrmAddPlan(this,"添加计划",true);
+		//商家
+		if(e.getSource()==this.menu_product){
+			FrmPro dlg=new FrmPro(this,"商品管理",true);
 			dlg.setVisible(true);
 		}
-		else if(e.getSource()==this.menuItem_DeletePlan){
-			if(this.curPlan==null) {
-				JOptionPane.showMessageDialog(null, "请选择计划", "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			try {
-				PersonPlanUtil.planManager.deletePlan(this.curPlan);
-			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		else if(e.getSource()==this.menuItem_AddStep){
-			FrmAddStep dlg=new FrmAddStep(this,"添加步骤",true);
-			dlg.plan=curPlan;
+	/*	else if(e.getSource()==this.menu_full){
+			FrmFull dlg=new FrmFull(this,"满减活动",true);
 			dlg.setVisible(true);
-			this.reloadPlanStepTabel(curPlan.getPlan_order()-1);
-			this.reloadPlanTable();
-			int j = FrmMain.this.dataTablePlan.getSelectedRow();
-		      if (j < 0) {
-		        return;
-		      }
-		      FrmMain.this.reloadPlanStepTabel(j);
 		}
-		else if(e.getSource()==this.menuItem_DeleteStep){
-			int i=FrmMain.this.dataTableStep.getSelectedRow();
-			if(i<0) {
-				JOptionPane.showMessageDialog(null, "请选择步骤", "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			try {
-				PersonPlanUtil.stepManager.deleteStep(this.planSteps.get(i));
-				int j = FrmMain.this.dataTablePlan.getSelectedRow();
-		        if (j < 0) {
-		          return;
-		        }
-		        FrmMain.this.reloadPlanStepTabel(j);
-		        this.reloadPlanStepTabel(curPlan.getPlan_order() - 1);
-		        this.reloadPlanTable();
-			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
+		else if(e.getSource()==this.menu_coupon){
+			FrmReaderManager dlg=new FrmReaderManager(this,"优惠券",true);
+			dlg.setVisible(true);
 		}
+		else if(e.getSource()==this.menu_checkorder){
+			FrmPublisherManager dlg=new FrmPublisherManager(this,"订单查看",true);
+			dlg.setVisible(true);
+		}
+		*/
+		/*
+		
 		else if(e.getSource()==this.menuItem_startStep){
 			int i=FrmMain.this.dataTableStep.getSelectedRow();
 			if(i<0) {
