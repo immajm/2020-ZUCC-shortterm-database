@@ -19,7 +19,7 @@ public class ProManager {
 		try {
 			conn=DBUtil.getConnection();
 			String sql="select pro_id,pro_name,pro_price,pro_discount_amount,type_id"
-					+ " from product where shop_id ='"+shop_id+"'order by userid";
+					+ " from product where shop_id ='"+shop_id+"'order by pro_id";
 			java.sql.Statement st=conn.createStatement();
 			java.sql.ResultSet rs=st.executeQuery(sql);
 			while(rs.next()){
@@ -64,14 +64,19 @@ public class ProManager {
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql="select * from BeanProduct where pro_id=?";
+			String sql="select * from product where pro_id=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1,pro.getPro_id());
 			java.sql.ResultSet rs=pst.executeQuery();
 			if(rs.next()) throw new BusinessException("商品编号已经存在");
+			sql="select * from pro_type where type_id=?";
+			pst=conn.prepareStatement(sql);
+			pst.setString(1,pro.getType_id());
+			rs=pst.executeQuery();
+			if(!rs.next()) throw new BusinessException("所属分类不存在,请先添加商品类别");
 			rs.close();
 			pst.close();
-			sql="insert into BeanProduct(pro_id,pro_name,pro_price,pro_discount_amount,type_id,shop_id)"
+			sql="insert into product(pro_id,pro_name,pro_price,pro_discount_amount,type_id,shop_id)"
 					+ " values(?,?,?,?,?,?)";
 			pst=conn.prepareStatement(sql);
 			pst.setString(1, pro.getPro_id());
@@ -80,6 +85,12 @@ public class ProManager {
 			pst.setDouble(4, pro.getPro_discount_amount());
 			pst.setString(5, pro.getType_id());
 			pst.setString(6, UserManager.currentUser.getUser_id());
+			pst.execute();
+			pst.close();
+			//pro_quantity要设初始值为0吗？
+			sql="update pro_type set pro_quantity=pro_quantity+1 where type_id=?";
+			pst=conn.prepareStatement(sql);
+			pst.setString(1, pro.getType_id());
 			pst.execute();
 			pst.close();
 		} catch (SQLException e) {
@@ -101,18 +112,26 @@ public class ProManager {
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql="select * from product where pro_id=?";
+			//删除的时候，传入bean类型，这里需要修改
+			String sql="select type_id from product where pro_id=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1,id);
 			java.sql.ResultSet rs=pst.executeQuery();
 			if(!rs.next()) throw new BusinessException("该商品不存在");
+			String type_id=rs.getString(1);
 			rs.close();
+			pst.close();
+			sql="update pro_type set pro_quantity=pro_quantity-1 where type_id=?";
+			pst=conn.prepareStatement(sql);
+			pst.setString(1, type_id);
+			pst.execute();
 			pst.close();
 			sql="delete from product where pro_id=?";
 			pst=conn.prepareStatement(sql);
 			pst.setString(1, id);
 			pst.execute();
 			pst.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DbException(e);

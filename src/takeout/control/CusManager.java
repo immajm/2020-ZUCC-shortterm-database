@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import takeout.model.BeanCustomer;
+import takeout.model.BeanProduct;
 import takeout.util.BaseException;
+import takeout.util.BusinessException;
 import takeout.util.DBUtil;
 import takeout.util.DbException;
 
@@ -56,4 +58,5 @@ public class CusManager {
 	
 		return bu;
 	}
+	
 }

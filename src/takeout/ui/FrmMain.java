@@ -44,8 +44,7 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenu menu_order=new JMenu("订单管理");
    // 商家
     private JMenu menu_product=new JMenu("商品管理");
-    private JMenu menu_full=new JMenu("满减活动");
-    private JMenu menu_coupon=new JMenu("优惠券");
+    private JMenu menu_activity=new JMenu("店面活动管理");
     private JMenu menu_checkorder=new JMenu("订单查看");
     //顾客
     private JMenu menu_menu=new JMenu("菜单");
@@ -62,7 +61,12 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenuItem  menuItem_AddOrder=new JMenuItem("添加订单");
     private JMenuItem  menuItem_DeleteOrder=new JMenuItem("删除订单");
     //2
-    
+    private JMenuItem  menuItem_prolist=new JMenuItem("商品菜单");
+    private JMenuItem  menuItem_protype=new JMenuItem("商品类型");
+    private JMenuItem  menuItem_full=new JMenuItem("满减活动");
+    private JMenuItem  menuItem_coupon=new JMenuItem("优惠券");
+    private JMenuItem  menuItem_neworder=new JMenuItem("新订单");
+    private JMenuItem  menuItem_okoreder=new JMenuItem("已完成订单");
     //3
     private JMenuItem  menuItem_buy=new JMenuItem("下单");
     //4
@@ -99,13 +103,14 @@ public class FrmMain extends JFrame implements ActionListener {
 		    menubar_admin.add(menu_order);
 		    this.setJMenuBar(menubar_admin);
 		}else if("商家".equals(UserManager.currentUser.getType())) {
-			this.menu_product.addActionListener(this);
-			this.menu_full.addActionListener(this);
-			this.menu_coupon.addActionListener(this);
-			this.menu_checkorder.addActionListener(this);
+			this.menu_product.add(this.menuItem_prolist); this.menuItem_prolist.addActionListener(this);
+			this.menu_product.add(this.menuItem_protype); this.menuItem_protype.addActionListener(this);
+			this.menu_activity.add(this.menuItem_full); this.menuItem_full.addActionListener(this);
+			this.menu_activity.add(this.menuItem_coupon); this.menuItem_coupon.addActionListener(this);
+			this.menu_checkorder.add(this.menuItem_neworder); this.menuItem_neworder.addActionListener(this);
+			this.menu_checkorder.add(this.menuItem_okoreder); this.menuItem_okoreder.addActionListener(this);
 			 menubar_shop.add(menu_product);
-			 menubar_shop.add(menu_full);
-			 menubar_shop.add(menu_coupon);
+			 menubar_shop.add(menu_activity);
 			 menubar_shop.add(menu_checkorder);
 			 this.setJMenuBar(menubar_shop);
 		}else if("顾客".equals(UserManager.currentUser.getType())) {
@@ -152,20 +157,20 @@ public class FrmMain extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		//商家
-		if(e.getSource()==this.menu_product){
-			FrmPro dlg=new FrmPro(this,"商品管理",true);
+		if(e.getSource()==this.menuItem_prolist){
+			FrmPro dlg=new FrmPro(this,"商品菜单",true);
 			dlg.setVisible(true);
 		}
-	/*	else if(e.getSource()==this.menu_full){
+		else if(e.getSource()==this.menuItem_protype){
+			FrmType dlg=new FrmType(this,"商品类型",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menuItem_full){
 			FrmFull dlg=new FrmFull(this,"满减活动",true);
 			dlg.setVisible(true);
 		}
-		else if(e.getSource()==this.menu_coupon){
-			FrmReaderManager dlg=new FrmReaderManager(this,"优惠券",true);
-			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menu_checkorder){
-			FrmPublisherManager dlg=new FrmPublisherManager(this,"订单查看",true);
+		/*	else if(e.getSource()==this.menu_checkorder){
+			FrmCoupon dlg=new FrmCoupon(this,"优惠券",true);
 			dlg.setVisible(true);
 		}
 		*/

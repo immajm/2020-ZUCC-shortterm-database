@@ -22,7 +22,6 @@ import takeout.control.ProManager;
 import takeout.model.BeanProduct;
 import takeout.util.BaseException;
 
-
 public class FrmPro extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
 	private Button btnAdd = new Button("添加商品");
@@ -33,18 +32,19 @@ public class FrmPro extends JDialog implements ActionListener{
 	private JTable proTable=new JTable(tablmod);
 	private void reloadProTable(){
 		try {
-			List<BeanProduct> users=(new ProManager()).loadAllPro();
-			tblData =new Object[users.size()][5];
-			for(int i=0;i<users.size();i++){
-				tblData[i][0]=users.get(i).getPro_id();
-				tblData[i][1]=users.get(i).getPro_name();
-				tblData[i][2]=users.get(i).getPro_price();
-				tblData[i][3]=users.get(i).getPro_discount_amount();
-				tblData[i][4]=users.get(i).getType_id();
+			List<BeanProduct> pro=(new ProManager()).loadAllPro();
+			tblData =new Object[pro.size()][5];
+			for(int i=0;i<pro.size();i++){
+				tblData[i][0]=pro.get(i).getPro_id();
+				tblData[i][1]=pro.get(i).getPro_name();
+				tblData[i][2]=pro.get(i).getPro_price();
+				tblData[i][3]=pro.get(i).getPro_discount_amount();
+				tblData[i][4]=pro.get(i).getType_id();
 			}
 			tablmod.setDataVector(tblData,tblTitle);
 			this.proTable.validate();
 			this.proTable.repaint();
+			
 		} catch (BaseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,7 +60,7 @@ public class FrmPro extends JDialog implements ActionListener{
 		this.reloadProTable();
 		this.getContentPane().add(new JScrollPane(this.proTable), BorderLayout.CENTER);
 		
-		// 屏幕居中显示
+		//屏幕居中显示
 		this.setSize(800, 600);
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 		double height = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -73,7 +73,7 @@ public class FrmPro extends JDialog implements ActionListener{
 		this.btnDelete.addActionListener(this);
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				System.exit(0);
+				//System.exit(0);
 			}
 		});
 	}
