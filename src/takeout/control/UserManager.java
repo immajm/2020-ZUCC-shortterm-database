@@ -99,7 +99,7 @@ public class UserManager {
 				BeanUser u=new BeanUser();
 				u.setUser_id(rs.getString(1));
 				u.setPwd(rs.getString(2));
-				u.setType("¿Í»§");
+				u.setType("¹Ë¿Í");
 				rs.close();
 				pst.close();
 				return u;

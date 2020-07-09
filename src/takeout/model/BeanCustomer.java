@@ -7,9 +7,9 @@ public class BeanCustomer {
 	private String cus_name;
 	private String sex;
 	private String cus_pwd;
-	private String tel;
+	private String tel;//为了方便把not null去掉了，后面要补的话打钩
 	private String mailbox;
-	private String city;
+	private String city;//为了方便把not null去掉了，后面要补的话打钩
 	private Date reg_time;
 	private String vip_state;
 	private Date vip_endtime;
