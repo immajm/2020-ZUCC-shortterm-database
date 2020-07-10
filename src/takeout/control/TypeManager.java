@@ -94,7 +94,7 @@ public class TypeManager {
 			pst.setString(1,id);
 			java.sql.ResultSet rs=pst.executeQuery();
 			if(rs.next()) {
-				if(rs.getInt(1)==0) throw new BusinessException("该类型的关联商品存在,不可删除");
+				if(rs.getInt(1)!=0) throw new BusinessException("该类型的关联商品存在,不可删除");
 			}
 			rs.close();
 			pst.close();

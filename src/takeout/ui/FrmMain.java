@@ -90,24 +90,9 @@ public class FrmMain extends JFrame implements ActionListener {
 	private FrmLogin dlgLogin=null;
 	private JPanel statusBar = new JPanel();
 	
-	//* 创建一个面板，面板中心显示一个标签，用于表示某个选项卡需要显示的内容
-    
-    private static JComponent createTextPanel(String text) {
-        // 创建面板, 使用一个 1 行 1 列的网格布局
-        JPanel panel = new JPanel(new GridLayout(2, 2));
 
-        // 创建标签
-        JLabel label = new JLabel(text);
-        label.setFont(new Font(null, Font.PLAIN, 50));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-
-        // 添加标签到面板
-        panel.add(label);
-
-        return panel;
-    }
 	
-	public FrmMain(){
+	public FrmMain() {
 		dlgLogin=new FrmLogin(this,"登陆",true);
 		dlgLogin.setVisible(true);
 	    //菜单
@@ -141,19 +126,14 @@ public class FrmMain extends JFrame implements ActionListener {
 			 menubar_shop.add(menu_checkorder);
 			 this.setJMenuBar(menubar_shop);
 		}else if("顾客".equals(UserManager.currentUser.getType())) {
-			JFrame jf = new JFrame("以下为点单页面，欢迎点单");
-	        jf.setSize(600, 500);
-	        jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	        jf.setLocationRelativeTo(null);
-	        final JTabbedPane tabbedPane = new JTabbedPane();
-	        tabbedPane.addTab("Tab01", new ImageIcon("image//pic1.png"),createTextPanel("TAB 01"));
-	        tabbedPane.addTab("Tab02", new ImageIcon("image//pic2.png"),createTextPanel("TAB 02") );
-	        tabbedPane.addTab("Tab03", new ImageIcon("image//pic3.png"), createTextPanel("TAB 03"), "This is a tab.");
-	        tabbedPane.setSelectedIndex(1);
-
-	        jf.setContentPane(tabbedPane);
-	        jf.setVisible(true);
-	    
+			try {
+				FrmCustomer dlg=new FrmCustomer();
+				this.setVisible(true);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 		}else if("骑手".equals(UserManager.currentUser.getType())) {
 			this.setExtendedState(Frame.MAXIMIZED_BOTH);//全屏显示
 			this.setTitle("外卖助手管理系统——骑手界面");

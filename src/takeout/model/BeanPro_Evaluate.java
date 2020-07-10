@@ -11,6 +11,7 @@ public class BeanPro_Evaluate {
 	private Date comment_date;
 	private int pro_level;
 	private Blob pro_photo;
+	
 	public int getShop_id() {
 		return shop_id;
 	}

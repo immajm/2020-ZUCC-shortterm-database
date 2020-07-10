@@ -2,9 +2,8 @@ package takeout.model;
 
 import java.sql.Date;
 
-public class BeanOrder {
+public class BeanOrder_all {
 	private String order_id;
-	private String pro_id;
 	private String shop_id;
 	private String address_id;
 	private String cus_id;
@@ -16,19 +15,13 @@ public class BeanOrder {
 	private String order_state;
 	private int rider_id;
 	private int full_id;
-	private int single_quantity;
 	public String getOrder_id() {
 		return order_id;
 	}
 	public void setOrder_id(String order_id) {
 		this.order_id = order_id;
 	}
-	public String getPro_id() {
-		return pro_id;
-	}
-	public void setPro_id(String pro_id) {
-		this.pro_id = pro_id;
-	}
+	
 	public String getShop_id() {
 		return shop_id;
 	}
@@ -95,13 +88,6 @@ public class BeanOrder {
 	public void setFull_id(int full_id) {
 		this.full_id = full_id;
 	}
-	public int getSingle_quantity() {
-		return single_quantity;
-	}
-	public void setSingle_quantity(int single_quantity) {
-		this.single_quantity = single_quantity;
-	}
-	
 	
 	
 	

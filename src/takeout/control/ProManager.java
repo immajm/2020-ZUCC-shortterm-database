@@ -64,9 +64,10 @@ public class ProManager {
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql="select * from product where pro_id=?";
+			String sql="select * from product where pro_id=? and shop_id= ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1,pro.getPro_id());
+			pst.setString(2,UserManager.currentUser.getUser_id());
 			java.sql.ResultSet rs=pst.executeQuery();
 			if(rs.next()) throw new BusinessException("商品编号已经存在");
 			sql="select * from pro_type where type_id=?";
