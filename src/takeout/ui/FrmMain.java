@@ -127,8 +127,7 @@ public class FrmMain extends JFrame implements ActionListener {
 			 this.setJMenuBar(menubar_shop);
 		}else if("¹Ë¿Í".equals(UserManager.currentUser.getType())) {
 			try {
-				FrmCustomer dlg=new FrmCustomer();
-				this.setVisible(true);
+				new FrmCustomer();
 			} catch (BaseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

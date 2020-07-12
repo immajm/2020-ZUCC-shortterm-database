@@ -4,32 +4,40 @@ import java.sql.Blob;
 import java.sql.Date;
 
 public class BeanPro_Evaluate {
-	private int shop_id;
-	private int pro_id;
-	private int cus_id;
+	private String order_id;
+	private String shop_id;
+	private String pro_id;
+	private String cus_id;
 	private String comment;
 	private Date comment_date;
 	private int pro_level;
-	private Blob pro_photo;
+	private Blob pro_photo;//œ»≤ª∑≈
 	
-	public int getShop_id() {
+	public String getOrder_id() {
+		return order_id;
+	}
+	public void setOrder_id(String order_id) {
+		this.order_id = order_id;
+	}
+	public String getShop_id() {
 		return shop_id;
 	}
-	public void setShop_id(int shop_id) {
+	public void setShop_id(String shop_id) {
 		this.shop_id = shop_id;
 	}
-	public int getPro_id() {
+	public String getPro_id() {
 		return pro_id;
 	}
-	public void setPro_id(int pro_id) {
+	public void setPro_id(String pro_id) {
 		this.pro_id = pro_id;
 	}
-	public int getCus_id() {
+	public String getCus_id() {
 		return cus_id;
 	}
-	public void setCus_id(int cus_id) {
+	public void setCus_id(String cus_id) {
 		this.cus_id = cus_id;
 	}
+	
 	public String getComment() {
 		return comment;
 	}
@@ -54,6 +62,7 @@ public class BeanPro_Evaluate {
 	public void setPro_photo(Blob pro_photo) {
 		this.pro_photo = pro_photo;
 	}
+	
 	
 	
 }

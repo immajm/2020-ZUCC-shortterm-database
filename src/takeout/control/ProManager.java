@@ -1,6 +1,7 @@
 package takeout.control;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +10,72 @@ import takeout.util.BusinessException;
 import takeout.util.BaseException;
 import takeout.util.DBUtil;
 import takeout.util.DbException;
+import takeout.model.BeanPro_Evaluate;
 import takeout.model.BeanProduct;
 
 public class ProManager {
+	
+	public void ModifyEva(BeanPro_Evaluate u)throws BaseException{
+		Connection conn=null;
+		String orderid=u.getOrder_id();
+		String proid=u.getPro_id();
+		String Comment=u.getComment();
+		Date Comment_date=u.getComment_date();
+		int level= u.getPro_level();
+		try {
+			conn=DBUtil.getConnection();
+			String sql="update pro_evaluate set comment=?,comment_date=?,pro_level=?"
+						+ "where order_id='"+orderid+"' and pro_id='"+proid+"' "
+							+ "and cus_id='"+UserManager.currentUser.getUser_id()+"'";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setString(1,Comment);
+			pst.setDate(2,Comment_date);
+			pst.setInt(3, level);
+			pst.execute();
+			pst.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+			
+	}
+	
+	public List<BeanPro_Evaluate> loadAllEva()throws BaseException{
+		List<BeanPro_Evaluate> result=new ArrayList<BeanPro_Evaluate>();
+		String cus_id=UserManager.currentUser.getUser_id();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="select order_id,shop_id,pro_id,comment,comment_date,pro_level"
+					+ " from pro_evaluate where cus_is ='"+cus_id+"'";
+			java.sql.Statement st=conn.createStatement();
+			java.sql.ResultSet rs=st.executeQuery(sql);
+			while(rs.next()){
+				BeanPro_Evaluate u=new BeanPro_Evaluate();
+				u.setOrder_id(rs.getString(1));
+				u.setShop_id(rs.getString(2));
+				u.setPro_id(rs.getString(3));
+				u.setCus_id(UserManager.currentUser.getUser_id());
+				u.setComment(rs.getString(4));
+				u.setComment_date(rs.getDate(5));
+				u.setPro_level(rs.getInt(6));
+				result.add(u);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return result;
+	}
 	public List<BeanProduct> loadAllPro()throws BaseException{
 		List<BeanProduct> result=new ArrayList<BeanProduct>();
 		String shop_id=UserManager.currentUser.getUser_id();
@@ -109,7 +173,7 @@ public class ProManager {
 		}
 	}
 
-	public void deleteUser(String id) throws BaseException {
+	public void deletePro(String id) throws BaseException {
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
