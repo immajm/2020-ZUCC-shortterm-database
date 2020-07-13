@@ -28,9 +28,9 @@ import takeout.model.BeanProduct;
 import takeout.model.BeanUser;
 import takeout.util.BaseException;
 
-public class FrmEva extends JDialog implements ActionListener{//需要注意的是，在完成订单后在订单文件中添加pro_evaluate中的内容
-	public static BeanPro_Evaluate currentorderid=null;
-	public static BeanPro_Evaluate currentproid=null;
+public class FrmEva extends JDialog implements ActionListener{
+	public static String Eva_orderid=null;
+	public static String Eva_proid=null;
 	
 	private JPanel toolBar = new JPanel();
 	private Button btnEva = new Button("进行商品评价");
@@ -90,12 +90,13 @@ public class FrmEva extends JDialog implements ActionListener{//需要注意的是，在
 		if(e.getSource()==this.btnEva){
 			int i= this.proTable.getSelectedRow();
 			if(i<0) {
-				JOptionPane.showMessageDialog(null,"请选择订单","提示",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,"请选择想要评价的订单","提示",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			else {
-				FrmEva.currentorderid.setOrder_id(tblData[i][0].toString());
-				FrmEva.currentproid.setPro_id(tblData[i][2].toString());
+				
+				Eva_orderid=tblData[i][0].toString();
+				Eva_proid=tblData[i][2].toString();
 				FrmEva_Modify dlg=new FrmEva_Modify(this,"增加评价",true);
 				dlg.setVisible(true);
 				this.reloadAddTable();

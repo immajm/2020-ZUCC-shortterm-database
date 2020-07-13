@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -64,25 +65,27 @@ public class FrmEva_Modify extends JDialog implements ActionListener{
 			return;
 		}
 		else if(e.getSource()==this.btnOk){
-			String orderid=FrmEva.currentorderid.getOrder_id();
-			String proid=FrmEva.currentproid.getPro_id();
-			
-			String time =""+System.currentTimeMillis();
+			String orderid=FrmEva.Eva_orderid;
+			String proid=FrmEva.Eva_proid;
+			Date date=null;
+			Date date0 = new Date();       //当前时间转为String
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			java.util.Date d=null;
-			try {
-				d = sdf.parse(time);
-			} catch (ParseException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			java.sql.Date date=new java.sql.Date(d.getTime());
+		    String createdate = sdf.format(date0);
+		    try {
+		         String time = createdate;//String转为util.Date
+		         sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		         java.util.Date ot=sdf.parse(time);
+		         date = new java.sql.Date(ot.getTime());//util.Date转为sql.Date
+		    } catch (ParseException e1) {
+	            // TODO Auto-generated catch block
+	            e1.printStackTrace();
+		    }
 			
 			BeanPro_Evaluate u= new BeanPro_Evaluate();
 			u.setOrder_id(orderid);
 			u.setPro_id(proid);
 			u.setComment(edtComment.getText());
-			u.setComment_date(date);
+			u.setComment_date((java.sql.Date) date);
 			u.setPro_level((int)Double.parseDouble(edtLevel.getText()));
 			try {
 				(new ProManager()).ModifyEva(u);

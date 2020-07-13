@@ -74,13 +74,15 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenuItem  menuItem_protype=new JMenuItem("商品类型管理");
     private JMenuItem  menuItem_full=new JMenuItem("满减活动");
     private JMenuItem  menuItem_coupon=new JMenuItem("优惠券");
-    private JMenuItem  menuItem_neworder=new JMenuItem("新订单");
+    private JMenuItem  menuItem_neworder=new JMenuItem("新订单");//还没有添加，可以从其他模块拿
     private JMenuItem  menuItem_okoreder=new JMenuItem("已完成订单");
     //3
-    //private JMenuItem  menuItem_buy=new JMenuItem("下单");
+    //写在FrmCustomer
     //4
+    private JMenuItem  menuItem_checknew=new JMenuItem("查看最新订单");
+    private JMenuItem  menuItem_takeorder=new JMenuItem("历史记录");
+    private JMenuItem  menuItem_takeorder=new JMenuItem("骑手入账表");
     private JMenuItem  menuItem_takeorder=new JMenuItem("接单");
-    
     /*
     private JMenuItem  menuItem_modifyPwd=new JMenuItem("密码修改");
     private JMenuItem  menuItem_static1=new JMenuItem("统计1");

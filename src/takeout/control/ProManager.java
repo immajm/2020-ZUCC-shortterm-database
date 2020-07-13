@@ -25,12 +25,14 @@ public class ProManager {
 		try {
 			conn=DBUtil.getConnection();
 			String sql="update pro_evaluate set comment=?,comment_date=?,pro_level=?"
-						+ "where order_id='"+orderid+"' and pro_id='"+proid+"' "
-							+ "and cus_id='"+UserManager.currentUser.getUser_id()+"'";
+						+ " where order_id=? and pro_id=? and cus_id=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1,Comment);
 			pst.setDate(2,Comment_date);
 			pst.setInt(3, level);
+			pst.setString(4,orderid);
+			pst.setString(5,proid);
+			pst.setString(6,UserManager.currentUser.getUser_id());
 			pst.execute();
 			pst.close();
 		}catch (SQLException e) {
@@ -40,14 +42,14 @@ public class ProManager {
 			
 	}
 	
-	public List<BeanPro_Evaluate> loadAllEva()throws BaseException{
+	public List<BeanPro_Evaluate> loadAllEva()throws BaseException{//显示完整的商品评价表
 		List<BeanPro_Evaluate> result=new ArrayList<BeanPro_Evaluate>();
 		String cus_id=UserManager.currentUser.getUser_id();
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
 			String sql="select order_id,shop_id,pro_id,comment,comment_date,pro_level"
-					+ " from pro_evaluate where cus_is ='"+cus_id+"'";
+					+ " from pro_evaluate where cus_id ='"+cus_id+"'";
 			java.sql.Statement st=conn.createStatement();
 			java.sql.ResultSet rs=st.executeQuery(sql);
 			while(rs.next()){

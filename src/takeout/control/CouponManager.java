@@ -12,7 +12,8 @@ import takeout.util.DBUtil;
 import takeout.util.DbException;
 
 public class CouponManager {
-	public List<BeanCoupon> loadAllCou()throws BaseException{
+	//商家界面的显示
+	public List<BeanCoupon> loadAllCou_shop()throws BaseException{
 		List<BeanCoupon> result=new ArrayList<BeanCoupon>();
 		String shop_id=UserManager.currentUser.getUser_id();
 		Connection conn=null;
@@ -47,7 +48,7 @@ public class CouponManager {
 		}
 		return result;
 	}
-
+	
 	public void createCou(BeanCoupon cou) throws BaseException{
 		if(cou.getCoupon_id()==null || "".equals(cou.getCoupon_id()) ){
 			throw new BusinessException("优惠券编号不为空");
@@ -104,7 +105,7 @@ public class CouponManager {
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql="delete from product where pro_id=?";
+			String sql="delete from coupon where coupon_id=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1, id);
 			pst.execute();

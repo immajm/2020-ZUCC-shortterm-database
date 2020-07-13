@@ -77,7 +77,7 @@ public class FrmCou_add extends JDialog implements ActionListener{
 			int quantity=(int)Double.parseDouble(this.edtQuantity.getText().toString());
 			
 			String start=this.edtStart.getText();  
-			String end=this.edtStart.getText();  
+			String end=this.edtEnd.getText();  
 	        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMdd");  
 	        java.sql.Date startDate=null,endDate=null; 
 			try {

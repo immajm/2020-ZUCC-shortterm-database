@@ -1,7 +1,7 @@
 package takeout.model;
 
 public class BeanOrder_detail {
-	private String order_id;
+	private String order_id;//把E-R图里的order_id放最前面这样方便看
 	private String pro_id;
 	private int single_quantity;
 	private double single_cost;

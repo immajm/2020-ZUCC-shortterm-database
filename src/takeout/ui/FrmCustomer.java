@@ -36,15 +36,15 @@ import takeout.util.DbException;
 
 public class FrmCustomer extends JDialog implements ActionListener{
 	
-	public static int generate_orderid=1 ;
-	public static int SelectedIndex ;
-	public static String currentorderid ;
+	public static int generate_orderid=1 ;//重新生成订单号的flag
+	public static int SelectedIndex ;//标签号
+	public static String currentorderid ;//当前订单号
 	JPanel[] panel = new JPanel[100];
 	JTable proTable[]=new  JTable[100];
 	Object tblData[][][]=new Object[100][100][5];//用于商品信息陈列	
 	private JPanel toolBar = new JPanel();
 	private Button btnAdd = new Button("加入购物车");
-	private Button btnBuy = new Button("查看");
+	private Button btnBuy = new Button("查看购物车");
 	private Button btnMe = new Button("我的");
 	private Button btnEvaluate = new Button("订单评价");
 	
@@ -124,8 +124,6 @@ public class FrmCustomer extends JDialog implements ActionListener{
 	    jf.getContentPane().add(toolBar, BorderLayout.SOUTH);
 		jf.getContentPane().add(tabbedPane, BorderLayout.NORTH);
 	    jf.setVisible(true);
-		//订单价格=∑（单价-单品优惠）*数量-优惠券-满减
-	    
 	    
 		this.btnMe.addActionListener(this);	    
 	    this.btnAdd.addActionListener(this);
@@ -151,34 +149,38 @@ public class FrmCustomer extends JDialog implements ActionListener{
 			
 			int index=SelectedIndex;
 			int i=proTable[index].getSelectedRow();
+			
 			if(i<0) {
 				JOptionPane.showMessageDialog(null,  "请选择商品","提示",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			if(JOptionPane.showConfirmDialog(this,"确定加入购物车嘛吗？","确认",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+			if(JOptionPane.showConfirmDialog(this,"确定加入购物车吗？","确认",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
 				if(generate_orderid==1) {
-					FrmCustomer.currentorderid=""+System.currentTimeMillis();
+					FrmCustomer.currentorderid=""+(int)(System.currentTimeMillis()%1000000);
 					generate_orderid=0;
 				}
 				Connection conn=null;
+				Connection conn1=null;
+				Connection conn2=null;
 				try {
 					conn=DBUtil.getConnection();
 					String sql="select order_id from order_detail where order_id='"+FrmCustomer.currentorderid+"'";
 					java.sql.Statement st=conn.createStatement();
 					java.sql.ResultSet rs=st.executeQuery(sql);
-				//	st.close();
 					if(rs.next()) {//订单存在
-						sql="select pro_id from order_detail where pro_id='"+tblData[index][i][0].toString()+"'";
-						st=conn.createStatement();
-						java.sql.ResultSet rs1=st.executeQuery(sql);
-						st.close();
+						conn1=DBUtil.getConnection();
+						sql="select pro_id from order_detail where pro_id='"+tblData[index][i][0].toString()+"'"
+								+ "and order_id='"+FrmCustomer.currentorderid+"'";
+						java.sql.Statement st1=conn1.createStatement();
+						java.sql.ResultSet rs1=st1.executeQuery(sql);
 						if(rs1.next()) {//商品存在
-							sql="update order_detail set single_quantity=single_quantity+1 where pro_id='"+rs.getInt(1)+"'";
-							st=conn.createStatement();
-							st.execute(sql);
-							st.close();
-						}
-						else{//商品不存在
+							conn2=DBUtil.getConnection();
+							sql="update order_detail set single_quantity=single_quantity+1 where pro_id='"+rs1.getString(1)+"'"
+									+ "and order_id='"+FrmCustomer.currentorderid+"'";
+							java.sql.Statement st2=conn2.createStatement();
+							st2.execute(sql);
+							st2.close();
+						}else{//商品不存在
 							BeanOrder_detail u=new BeanOrder_detail();
 							u.setOrder_id(FrmCustomer.currentorderid);//订单号
 							u.setPro_id(tblData[index][i][0].toString());//商品号
@@ -205,8 +207,9 @@ public class FrmCustomer extends JDialog implements ActionListener{
 						
 					    (new OrderManager()).createOrd_detail(u);
 					}
-					st.close();
 					rs.close();
+					st.close();
+					conn.close();
 				} catch (SQLException|BaseException e1) {
 					JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
 				}
@@ -217,7 +220,7 @@ public class FrmCustomer extends JDialog implements ActionListener{
 			FrmCheckOrder dlg=new FrmCheckOrder(this,"查看购物车",true);
 			dlg.setVisible(true);
 		}
-		else if(e.getSource()==this.btnMe) {
+		else if(e.getSource()==this.btnMe) {//改
 			FrmMe dlg=new FrmMe(this,"我的信息",true);
 			dlg.setVisible(true);
 		}
@@ -226,6 +229,5 @@ public class FrmCustomer extends JDialog implements ActionListener{
 			dlg.setVisible(true);
 		}
     }
-    
 }
 

@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JDialog;
@@ -19,11 +21,15 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import takeout.control.CouponManager;
 import takeout.control.OrderManager;
 import takeout.control.ProManager;
 import takeout.model.BeanOrder_detail;
 import takeout.model.BeanProduct;
 import takeout.util.BaseException;
+import takeout.util.BusinessException;
+import takeout.util.DBUtil;
+import takeout.util.DbException;
 
 public class FrmCheckOrder extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
@@ -43,7 +49,7 @@ public class FrmCheckOrder extends JDialog implements ActionListener{
 					tblData[i][1]=u.get(i).getPro_id();
 					tblData[i][2]=u.get(i).getSingle_quantity();
 					tblData[i][3]=u.get(i).getSingle_cost();
-					tblData[i][4]=u.get(i).getSingle_quantity();
+					tblData[i][4]=u.get(i).getSingle_discount();
 				}
 				tablmod.setDataVector(tblData,tblTitle);
 				this.otable.validate();
@@ -87,7 +93,7 @@ public class FrmCheckOrder extends JDialog implements ActionListener{
 		
 		if(e.getSource()==this.btnOk){
 			if(JOptionPane.showConfirmDialog(this,"确定开始结算吗？","确认",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
-				FrmFinal_order dlg=new FrmFinal_order(this,"结算",true);//更具订单号结算，该怎么传入？
+				FrmFinal_order dlg=new FrmFinal_order(this,"结算",true);
 				dlg.setVisible(true);
 			}
 		}
@@ -95,7 +101,24 @@ public class FrmCheckOrder extends JDialog implements ActionListener{
 			this.setVisible(false);
 			return;
 		}
-		
+		else if(e.getSource()==this.btnDelete) {
+			int i=this.otable.getSelectedRow();
+			if(i<0) {
+				JOptionPane.showMessageDialog(null,  "请选择要删除的商品","提示",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			if(JOptionPane.showConfirmDialog(this,"确定删除该商品吗？","确认",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
+				try {
+					String orderid= tblData[i][0].toString();
+					String proid = tblData[i][1].toString();
+					(new OrderManager()).deleteOrd_detail(orderid,proid);
+				} catch (BaseException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			this.setVisible(true);
+			reloadOrder_dTable();
+		}
 	}
    
     
