@@ -2,6 +2,7 @@ package takeout.model;
 
 import java.sql.Blob;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class BeanPro_Evaluate {
 	private String order_id;
@@ -9,7 +10,7 @@ public class BeanPro_Evaluate {
 	private String pro_id;
 	private String cus_id;
 	private String comment;
-	private Date comment_date;
+	private Timestamp comment_date;
 	private int pro_level;
 	private Blob pro_photo;//œ»≤ª∑≈
 	
@@ -44,11 +45,11 @@ public class BeanPro_Evaluate {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	public Date getComment_date() {
+	public Timestamp getComment_date() {
 		return comment_date;
 	}
-	public void setComment_date(Date comment_date) {
-		this.comment_date = comment_date;
+	public void setComment_date(Timestamp timestamp) {
+		this.comment_date = timestamp;
 	}
 	public int getPro_level() {
 		return pro_level;

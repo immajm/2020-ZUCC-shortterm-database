@@ -1,13 +1,15 @@
 package takeout.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class BeanRider_Account {
-	private String order_id;
+	
 	private String rider_id;
-	private Date recordtime;
-	private String rider_evaluate;
-	private double income;
+	private String order_id;
+	private Timestamp recordtime;
+	private String rider_evaluate;//not null È¥µô
+	private double income;//not null È¥µô
 	public String getOrder_id() {
 		return order_id;
 	}
@@ -20,11 +22,11 @@ public class BeanRider_Account {
 	public void setRider_id(String rider_id) {
 		this.rider_id = rider_id;
 	}
-	public Date getRecordtime() {
+	public Timestamp getRecordtime() {
 		return recordtime;
 	}
-	public void setRecordtime(Date recordtime) {
-		this.recordtime = recordtime;
+	public void setRecordtime(Timestamp timestamp) {
+		this.recordtime = timestamp;
 	}
 	public String getRider_evaluate() {
 		return rider_evaluate;

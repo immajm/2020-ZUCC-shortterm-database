@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import takeout.control.CouponManager;
+import takeout.control.PossessManager;
 import takeout.control.UserManager;
 import takeout.model.BeanCoupon;
 import takeout.util.BaseException;
@@ -39,7 +40,7 @@ public class FrmCoupon extends JDialog implements ActionListener{
 	private JTable couTable=new JTable(tablmod);
 	private void reloadCouTable(){
 		try {
-			List<BeanCoupon> cou=(new CouponManager()).loadAllCou();
+			List<BeanCoupon> cou=(new CouponManager()).loadAllCou_shop();
 			tblData =new Object[cou.size()][5];
 			for(int i=0;i<cou.size();i++){
 				tblData[i][0]=cou.get(i).getCoupon_id();

@@ -1,5 +1,6 @@
 package takeout.control;
 
+import java.sql.Timestamp;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -20,7 +21,6 @@ public class ProManager {
 		String orderid=u.getOrder_id();
 		String proid=u.getPro_id();
 		String Comment=u.getComment();
-		Date Comment_date=u.getComment_date();
 		int level= u.getPro_level();
 		try {
 			conn=DBUtil.getConnection();
@@ -28,7 +28,7 @@ public class ProManager {
 						+ " where order_id=? and pro_id=? and cus_id=?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1,Comment);
-			pst.setDate(2,Comment_date);
+			pst.setTimestamp(2,new java.sql.Timestamp(System.currentTimeMillis()));
 			pst.setInt(3, level);
 			pst.setString(4,orderid);
 			pst.setString(5,proid);
@@ -59,7 +59,7 @@ public class ProManager {
 				u.setPro_id(rs.getString(3));
 				u.setCus_id(UserManager.currentUser.getUser_id());
 				u.setComment(rs.getString(4));
-				u.setComment_date(rs.getDate(5));
+				u.setComment_date((Timestamp)rs.getTimestamp(5));
 				u.setPro_level(rs.getInt(6));
 				result.add(u);
 			}

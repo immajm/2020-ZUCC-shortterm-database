@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,11 +17,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import takeout.control.ProManager;
+import takeout.control.RiderManager;
 import takeout.model.BeanPro_Evaluate;
+import takeout.model.BeanRider_Account;
 import takeout.util.BaseException;
 
-public class FrmEva_Modify extends JDialog implements ActionListener{
+public class FrmEva_RModify extends JDialog implements ActionListener {
 	public static String EvaComment =null;
+	public static Date EvaDate =null;
 	
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
@@ -30,12 +32,11 @@ public class FrmEva_Modify extends JDialog implements ActionListener{
 	private Button btnCancel = new Button("取消");
 	
 	private JLabel labelComment = new JLabel("评价内容");
-	private JLabel labelLevel = new JLabel("星级");
 	//评价
 	private JTextField edtComment = new JTextField(20);
 	private JTextField edtLevel = new JTextField(20);
 	
-	public FrmEva_Modify(JDialog f, String s, boolean b) {
+	public FrmEva_RModify(JDialog f, String s, boolean b) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnOk);
@@ -43,8 +44,6 @@ public class FrmEva_Modify extends JDialog implements ActionListener{
 		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
 		workPane.add(labelComment);
 		workPane.add(edtComment);
-		workPane.add(labelLevel);
-		workPane.add(edtLevel);
 		
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
 		this.setSize(300, 300);
@@ -68,18 +67,22 @@ public class FrmEva_Modify extends JDialog implements ActionListener{
 			return;
 		}
 		else if(e.getSource()==this.btnOk){
-			String orderid=FrmEva.Eva_orderid;
-			String proid=FrmEva.Eva_proid;
+			String orderid=FrmR_Eva.Eva_Rorderid;
+			String riderid=FrmR_Eva.Eva_Rriderid;
 			
-			BeanPro_Evaluate u= new BeanPro_Evaluate();
+		    if(!edtComment.getText().equals("好")&&!edtComment.getText().equals("差")) {
+		    	JOptionPane.showMessageDialog(null,  "骑手评价只能填‘好’或‘差’","提示",JOptionPane.ERROR_MESSAGE);
+				return;
+		    }
+		    BeanRider_Account u= new BeanRider_Account();
 			u.setOrder_id(orderid);
-			u.setPro_id(proid);
-			u.setComment(edtComment.getText());
+			u.setRider_id(riderid);
+			u.setRider_evaluate(edtComment.getText());
 				EvaComment=edtComment.getText();
-			u.setPro_level((int)Double.parseDouble(edtLevel.getText()));
 				
 			try {
-				(new ProManager()).ModifyEva(u);
+				(new RiderManager()).ModifyREva(u);
+				(new RiderManager()).salary(FrmR_Eva.Eva_Rorderid,FrmR_Eva.Eva_Rriderid);
 				this.setVisible(false);
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);

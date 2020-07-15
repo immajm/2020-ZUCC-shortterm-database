@@ -1,6 +1,7 @@
 package takeout.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class BeanOrder_all {
 	private String order_id;
@@ -10,10 +11,10 @@ public class BeanOrder_all {
 	private String coupon_id;//物理模型里面是int型，如果数据库重装，需要手动修改为varchar(20)
 	private double original_cost;
 	private double final_cost;
-	private Date order_time;
-	private Date reachtime;
+	private Timestamp order_time;
+	private Timestamp reachtime;
 	private String order_state;
-	private int rider_id;
+	private String rider_id;
 	private int full_id;
 	public String getOrder_id() {
 		return order_id;
@@ -58,16 +59,17 @@ public class BeanOrder_all {
 	public void setFinal_cost(double final_cost) {
 		this.final_cost = final_cost;
 	}
-	public Date getOrder_time() {
+	
+	public Timestamp getOrder_time() {
 		return order_time;
 	}
-	public void setOrder_time(Date order_time) {
+	public void setOrder_time(Timestamp order_time) {
 		this.order_time = order_time;
 	}
-	public Date getReachtime() {
+	public Timestamp getReachtime() {
 		return reachtime;
 	}
-	public void setReachtime(Date reachtime) {
+	public void setReachtime(Timestamp reachtime) {
 		this.reachtime = reachtime;
 	}
 	public String getOrder_state() {
@@ -76,10 +78,10 @@ public class BeanOrder_all {
 	public void setOrder_state(String order_state) {
 		this.order_state = order_state;
 	}
-	public int getRider_id() {
+	public String getRider_id() {
 		return rider_id;
 	}
-	public void setRider_id(int rider_id) {
+	public void setRider_id(String rider_id) {
 		this.rider_id = rider_id;
 	}
 	public int getFull_id() {

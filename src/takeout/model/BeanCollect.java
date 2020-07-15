@@ -1,28 +1,29 @@
 package takeout.model;
 
 public class BeanCollect {
-	private int cus_id;
-	private int coupon_id;
-	private int shop_id;
+	private String cus_id;
+	private String coupon_id;
+	private String shop_id;
 	private int order_quantity;
 	private int order_cnt;
 	
-	public int getCus_id() {
+	
+	public String getCus_id() {
 		return cus_id;
 	}
-	public void setCus_id(int cus_id) {
+	public void setCus_id(String cus_id) {
 		this.cus_id = cus_id;
 	}
-	public int getCoupon_id() {
+	public String getCoupon_id() {
 		return coupon_id;
 	}
-	public void setCoupon_id(int coupon_id) {
+	public void setCoupon_id(String coupon_id) {
 		this.coupon_id = coupon_id;
 	}
-	public int getShop_id() {
+	public String getShop_id() {
 		return shop_id;
 	}
-	public void setShop_id(int shop_id) {
+	public void setShop_id(String shop_id) {
 		this.shop_id = shop_id;
 	}
 	public int getOrder_quantity() {

@@ -45,8 +45,9 @@ public class FrmCustomer extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
 	private Button btnAdd = new Button("加入购物车");
 	private Button btnBuy = new Button("查看购物车");
-	private Button btnMe = new Button("我的");
+	private Button btnMe = new Button("开通会员");
 	private Button btnEvaluate = new Button("订单评价");
+	private Button btnR_Evaluate = new Button("骑手评价");
 	
 	Connection conn=null;
     JComponent createPanel( String shopid,int i) throws DbException {
@@ -99,10 +100,12 @@ public class FrmCustomer extends JDialog implements ActionListener{
 	    jf.setLocationRelativeTo(null);
 	    
 	    toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    toolBar.add(btnR_Evaluate);
 	    toolBar.add(btnEvaluate);
 	    toolBar.add(btnMe);
 		toolBar.add(btnAdd);
 		toolBar.add(btnBuy);
+		
 		
 		//布局在左侧，滚动拉动
 	    final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT,JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -129,6 +132,7 @@ public class FrmCustomer extends JDialog implements ActionListener{
 	    this.btnAdd.addActionListener(this);
 		this.btnBuy.addActionListener(this);
 		this.btnEvaluate.addActionListener(this);
+		this.btnR_Evaluate.addActionListener(this);
 		
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -220,12 +224,24 @@ public class FrmCustomer extends JDialog implements ActionListener{
 			FrmCheckOrder dlg=new FrmCheckOrder(this,"查看购物车",true);
 			dlg.setVisible(true);
 		}
-		else if(e.getSource()==this.btnMe) {//改
-			FrmMe dlg=new FrmMe(this,"我的信息",true);
-			dlg.setVisible(true);
+		else if(e.getSource()==this.btnMe) {
+			FrmMe dlg;
+			try {
+				dlg = new FrmMe(this,"开通会员",true);
+				dlg.setVisible(true);
+			} catch (DbException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 		}
 		else if(e.getSource()==this.btnEvaluate){
+			
 			FrmEva dlg=new FrmEva(this,"订单评价",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.btnR_Evaluate){
+			FrmR_Eva dlg=new FrmR_Eva(this,"骑手评价",true);
 			dlg.setVisible(true);
 		}
     }

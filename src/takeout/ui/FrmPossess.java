@@ -25,9 +25,12 @@ import takeout.util.BaseException;
 
 public class FrmPossess extends JDialog implements ActionListener{
 	public static String currentcoupon=null ;
+	public static double currentcoupon_discount=0;
 	public static Date coupon_endtime;
 	
+	
 	private JPanel toolBar = new JPanel();
+	private Button btnCollect = new Button("集单送券");
 	private Button btnOk = new Button("确定");
 	private Button btnCancel = new Button("取消");
 	
@@ -37,7 +40,7 @@ public class FrmPossess extends JDialog implements ActionListener{
 	private JTable proTable=new JTable(tablmod);
 	private void reloadCouponTable(){
 		try {
-			List<BeanPossess> pro=(new PossessManager()).loadCollect_cus();
+			List<BeanPossess> pro=(new PossessManager()).loadPossess_cus();
 			tblData =new Object[pro.size()][5];
 			for(int i=0;i<pro.size();i++){
 				tblData[i][0]=pro.get(i).getCoupon_id();
@@ -59,9 +62,10 @@ public class FrmPossess extends JDialog implements ActionListener{
 	public FrmPossess(JDialog f, String s, boolean b) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		toolBar.add(btnCollect);
 		toolBar.add(btnOk);
 		toolBar.add(btnCancel);
-		this.getContentPane().add(toolBar, BorderLayout.SOUTH);
+		this.getContentPane().add(toolBar, BorderLayout.NORTH);
 		this.reloadCouponTable();
 		this.getContentPane().add(new JScrollPane(this.proTable), BorderLayout.CENTER);
 		//屏幕居中显示
@@ -72,7 +76,8 @@ public class FrmPossess extends JDialog implements ActionListener{
 				(int) (height - this.getHeight()) / 2);
 
 		this.validate();
-
+		
+		this.btnCollect.addActionListener(this);
 		this.btnOk.addActionListener(this);
 		this.btnCancel.addActionListener(this);
 		this.addWindowListener(new WindowAdapter() {
@@ -94,22 +99,24 @@ public class FrmPossess extends JDialog implements ActionListener{
 			}
 			
 			if(JOptionPane.showConfirmDialog(this,"确定使用吗？","确认",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
-				if(coupon_endtime.getTime()<OrderManager.final_ordertime.getTime()) {
-					JOptionPane.showMessageDialog(null,  "优惠券过期，不能使用","提示",JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-				else {
+				
 					currentcoupon = tblData[i][0].toString();//使用，优惠券数量-1//最好一次选定，重新选数量多减了
+					currentcoupon_discount=(int)Double.parseDouble(tblData[i][2].toString());
 					try {
 						(new PossessManager()).minus_quantity();
 					} catch (BaseException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-				}
+				
 			}
 			this.setVisible(true);
 			reloadCouponTable();
+		}
+		else if(e.getSource()==this.btnCollect){
+			FrmCollect dlg=new FrmCollect(this,"集单送券表",true);
+			dlg.setVisible(true);
+			this.reloadCouponTable();
 		}
 	}
 }

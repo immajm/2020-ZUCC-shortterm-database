@@ -16,10 +16,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import takeout.control.CouponManager;
+import takeout.control.PossessManager;
+import takeout.control.UserManager;
 import takeout.model.BeanCoupon;
 import takeout.util.BaseException;
 
 public class FrmCou_add extends JDialog implements ActionListener{
+	
+	public static String current_couidadd=null;
+	public static int current_couquantityadd;
+	
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
 	private Button btnOk = new Button("确定");
@@ -75,19 +81,19 @@ public class FrmCou_add extends JDialog implements ActionListener{
 			String id=this.edtId.getText();
 			double money=Double.parseDouble(this.edtMoney.getText().toString());
 			int quantity=(int)Double.parseDouble(this.edtQuantity.getText().toString());
-			
 			String start=this.edtStart.getText();  
-			String end=this.edtEnd.getText();  
-	        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyyMMdd");  
+			String end=this.edtEnd.getText(); 
+	        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");  //输入的格式一定要一样不然会出错
 	        java.sql.Date startDate=null,endDate=null; 
 			try {
 				java.util.Date d = sdf.parse(start);
 				startDate = new java.sql.Date(d.getTime());
 				d = sdf.parse(end);
-				endDate = new java.sql.Date(d.getTime());  
+				endDate = new java.sql.Date(d.getTime());
 			} catch (ParseException e2) {
 				e2.printStackTrace();
 			} 
+			
 	        
 			BeanCoupon cou=new BeanCoupon();
 			cou.setCoupon_id(id);
@@ -102,6 +108,14 @@ public class FrmCou_add extends JDialog implements ActionListener{
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
 			}
+			//优惠券生成后生成集单表已有部分，无已订单数
+			try {
+				(new PossessManager()).createCollect(id,quantity);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 		}
 		
 	}

@@ -39,7 +39,7 @@ public class FrmLogin extends JDialog implements ActionListener {
 	private JLabel labelwho = new JLabel("选择身份：");
 	private JTextField edtUserId = new JTextField(20);
 	private JPasswordField edtPwd = new JPasswordField(20);
-	String[] whoData = new String[] {"管理员","商家","顾客","骑手"};
+	String[] whoData = new String[] {"商家","顾客","骑手","管理员"};
 	final JComboBox<String> comboBox = new JComboBox<String>(whoData);
 	
 

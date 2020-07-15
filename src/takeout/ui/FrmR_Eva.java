@@ -11,49 +11,43 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import takeout.control.AddressManager;
 import takeout.control.ProManager;
 import takeout.control.RiderManager;
-import takeout.control.UserManager;
-import takeout.model.BeanAddress;
 import takeout.model.BeanPro_Evaluate;
-import takeout.model.BeanProduct;
-import takeout.model.BeanUser;
+import takeout.model.BeanRider_Account;
 import takeout.util.BaseException;
+import takeout.ui.FrmEva_RModify;
 
-public class FrmEva extends JDialog implements ActionListener{
-	public static String Eva_orderid=null;
-	public static String Eva_proid=null;
+public class FrmR_Eva extends JDialog implements ActionListener{
+	
+	public static String Eva_Rriderid=null;
+	public static String Eva_Rorderid=null;
 	
 	private JPanel toolBar = new JPanel();
-	private Button btnEva = new Button("进行商品评价");
-	private Object tblTitle[]={"订单编号","商家编号","商品编号","评价内容","评价时间","星级"};
+	private Button btnEva = new Button("进行骑手评价");
+	private Object tblTitle[]={"骑手编号","订单编号","评价内容","评价日期"};
 	private Object tblData[][];
 	DefaultTableModel tablmod=new DefaultTableModel();
-	private JTable proTable=new JTable(tablmod);
+	private JTable Table=new JTable(tablmod);
 	private void reloadAddTable(){
 		try {
-			List<BeanPro_Evaluate> pro=(new ProManager()).loadAllEva();
-			tblData =new Object[pro.size()][6];
+			List<BeanRider_Account> pro=(new RiderManager()).loadAllR_Eva();
+			tblData =new Object[pro.size()][4];
 			for(int i=0;i<pro.size();i++){
-				tblData[i][0]=pro.get(i).getOrder_id();
-				tblData[i][1]=pro.get(i).getShop_id();
-				tblData[i][2]=pro.get(i).getPro_id();
-				tblData[i][3]=pro.get(i).getComment();
-				tblData[i][4]=pro.get(i).getComment_date();
-				tblData[i][5]=pro.get(i).getPro_level();
+				tblData[i][0]=pro.get(i).getRider_id();
+				tblData[i][1]=pro.get(i).getOrder_id();
+				tblData[i][2]=pro.get(i).getRider_evaluate();
+				tblData[i][3]=pro.get(i).getRecordtime();
 			}
 			tablmod.setDataVector(tblData,tblTitle);
-			this.proTable.validate();
-			this.proTable.repaint();
+			this.Table.validate();
+			this.Table.repaint();
 			
 		} catch (BaseException e) {
 			// TODO Auto-generated catch block
@@ -61,14 +55,14 @@ public class FrmEva extends JDialog implements ActionListener{
 		}
 	}
 
-	public FrmEva(JDialog f, String s, boolean b) {
+	public FrmR_Eva(JDialog f, String s, boolean b) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		toolBar.add(btnEva);
 		this.getContentPane().add(toolBar, BorderLayout.NORTH);
 		//提取现有数据
 		this.reloadAddTable();
-		this.getContentPane().add(new JScrollPane(this.proTable), BorderLayout.CENTER);
+		this.getContentPane().add(new JScrollPane(this.Table), BorderLayout.CENTER);
 		//屏幕居中显示
 		this.setSize(800,450);
 		double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -89,17 +83,15 @@ public class FrmEva extends JDialog implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getSource()==this.btnEva){
-			int i= this.proTable.getSelectedRow();
+			int i= this.Table.getSelectedRow();
 			if(i<0) {
-				JOptionPane.showMessageDialog(null,"请选择想要评价的订单","提示",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,"请选择想要评价的骑手","提示",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			else {
-				
-				Eva_orderid=tblData[i][0].toString();
-				Eva_proid=tblData[i][2].toString();
-				FrmEva_Modify dlg=new FrmEva_Modify(this,"增加评价",true);
-				
+				Eva_Rriderid=tblData[i][0].toString();
+				Eva_Rorderid=tblData[i][1].toString();
+				FrmEva_RModify dlg=new FrmEva_RModify(this,"增加评价",true);
 				
 				dlg.setVisible(true);
 				this.reloadAddTable();

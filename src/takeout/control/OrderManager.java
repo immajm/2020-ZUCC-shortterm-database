@@ -2,15 +2,17 @@ package takeout.control;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import takeout.model.BeanOrder_all;
 import takeout.model.BeanOrder_detail;
-import takeout.ui.FrmAddress;
 import takeout.ui.FrmCustomer;
+import takeout.ui.FrmFinal_order;
 import takeout.ui.FrmPossess;
 import takeout.util.BaseException;
 import takeout.util.DBUtil;
@@ -22,7 +24,102 @@ public class OrderManager {
 	public static Date  final_ordertime;//下单时间
 	public static String currentshop_id;//当前商家
 	
-	public void load_Eva() throws BaseException{//订单生成后生成商品评价表已有部分，无评论
+	public static String[] province =new String[100] ;//省
+	public static String[] city =new String[100];//市
+	public static String[] region =new String[100];//区
+	
+	public int cnt_order()throws BaseException{
+		int cnt=0;
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="select count(order_id) from order_all where "
+					+ " cus_id ='"+UserManager.currentUser.getUser_id()+"' and "
+					+ " shop_id ='"+currentshop_id+"'";
+			java.sql.Statement st=conn.createStatement();
+			java.sql.ResultSet rs=st.executeQuery(sql);
+			while(rs.next()){
+				cnt=rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		return cnt;
+	}
+	
+	public void R_complish_update(String orderid)throws BaseException{
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="update order_all set order_state ='订单完成' "
+					+ " where order_id ='"+orderid+"'";
+			java.sql.Statement st=conn.createStatement();
+			st.execute(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+			
+	}
+	public void R_accept_update(String orderid)throws BaseException{
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="update order_all set order_state ='骑手已接单',rider_id='"+UserManager.currentUser.getUser_id()+"'"
+					+ " where order_id ='"+orderid+"'";
+			java.sql.Statement st=conn.createStatement();
+			st.execute(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+			
+	}
+	
+	
+	public List<BeanOrder_all> loadAllOrder_R() throws BaseException{//列出所有已接单和已下单的订单
+		//订单编号","用户","省","市","区","下单时间","要求送达","状态","接单骑手"
+		List<BeanOrder_all> result=new ArrayList<BeanOrder_all>();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="select order_id,order_all.cus_id,province,city,region,order_time,reachtime,order_state,rider_id"
+					+ " from order_all,address where order_all.address_id=address.address_id "
+					+ "and (order_state ='成功下单,等待接单' or order_state ='骑手已接单')";
+			java.sql.Statement st=conn.createStatement();
+			java.sql.ResultSet rs=st.executeQuery(sql);
+			int i=0;
+			while(rs.next()){
+				BeanOrder_all u=new BeanOrder_all();
+				u.setOrder_id(rs.getString(1));
+				u.setCus_id(rs.getString(2));
+				province[i]=rs.getString(3);
+				city[i]=rs.getString(4);
+				region[i]=rs.getString(5);
+				u.setOrder_time((Timestamp)rs.getTimestamp(6));
+				u.setReachtime((Timestamp)rs.getTimestamp(7));
+				u.setOrder_state(rs.getString(8));
+				u.setRider_id(rs.getString(9));
+				result.add(u);
+				i++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return result;
+	}
+	public void create_Eva() throws BaseException{//订单生成后生成商品评价表已有部分，无评论
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -174,17 +271,14 @@ public class OrderManager {
 	public void createOrd_all() throws BaseException{//增加总订单，并判断是否可以送券
 		String order_id=FrmCustomer.currentorderid;
 		String shop_id = null;//
-		String address_id=FrmAddress.currentaddress;
+		String address_id=FrmFinal_order.currentaddress;
 		String cus_id=UserManager.currentUser.getUser_id();
 		String coupon_id=FrmPossess.currentcoupon;
 		String full_id = null;
 		double original_cost=0;//
 		double discount=0;//
 		double final_cost;//
-		Date order_time = null;
-		Date reachtime;//等待骑手添加
 		String order_state="成功下单,等待接单";
-		int rider_id;
 		
 		Connection conn=null;
 		try {
@@ -213,40 +307,35 @@ public class OrderManager {
 			st.close();
 			
 			//优惠券
-			if(FrmPossess.currentcoupon!=null) {
-				sql="select discount from possess where coupon_id ='"+FrmPossess.currentcoupon+"'";
-				st=conn.createStatement();
-				rs=st.executeQuery(sql);
-				while(rs.next()){
-					discount+=rs.getDouble(1);
-				}
-				rs.close();
-				st.close();
-			}
-				
-		//满减	if()
-				
-		//会员打折还没有搞  if()
-			final_cost=original_cost-discount;
+			if(FrmPossess.currentcoupon!=null)
+				discount+=FrmPossess.currentcoupon_discount;
+			//满减
 			
-			//下单时间
-			Date date = new Date();       //当前时间转为String
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		    String createdate = sdf.format(date);
-		    try {
-		         String time = createdate;//String转为util.Date
-		         sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		         java.util.Date ot=sdf.parse(time);
-		         order_time = new java.sql.Date(ot.getTime());//util.Date转为sql.Date
-		         final_ordertime=order_time;
-		    } catch (ParseException e) {
-		            // TODO Auto-generated catch block
-		            e.printStackTrace();
-		    }
-		    
+			//会员打折
+			String state=null;
+			try {
+				sql="select vip_state from customer where cus_id ='"+UserManager.currentUser.getUser_id()+"'";
+				java.sql.Statement st1=conn.createStatement();
+				java.sql.ResultSet rs1=st1.executeQuery(sql);
+				while(rs1.next()) {
+					if(rs1.getString(1)==null) state="不是会员";
+					else state="尊享会员";
+				}
+			}catch (SQLException e) {
+				e.printStackTrace();
+				throw new DbException(e);
+			}
+			
+			if(state.equals("尊享会员")) {
+				final_cost=(original_cost-discount)*0.95;
+			}
+			else {
+				final_cost=original_cost-discount;
+			}
+			
 		    //生成新order_all
 		    sql="update order_all set shop_id=?,address_id=?,cus_id=?,coupon_id=?,full_id=?,"
-		    		+ "original_cost=?,final_cost=?,order_time=?,order_state=? "
+		    		+ "original_cost=?,final_cost=?,order_time=?,reachtime=?,order_state=? "
 		    		+ "where order_id='"+order_id+"'";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1,shop_id);
@@ -256,10 +345,10 @@ public class OrderManager {
 			pst.setString(5,full_id);
 			pst.setDouble(6,original_cost);
 			pst.setDouble(7,final_cost);
-			pst.setDate(8,(java.sql.Date) order_time);
-			pst.setString(9,order_state);
+			pst.setTimestamp(8,new java.sql.Timestamp(System.currentTimeMillis()));
+			pst.setTimestamp(9,new java.sql.Timestamp(System.currentTimeMillis()+900000));//半小时/15mins
+			pst.setString(10,order_state);
 			pst.execute();
-			
 			currentoriginal_cost=original_cost;
 			currentfinal_cost=final_cost;
 		} catch (SQLException e) {
