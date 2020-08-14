@@ -61,7 +61,6 @@ public class FrmMain extends JFrame implements ActionListener {
     private Button btnAccept = new Button("接单");
 	private Button btnComplish = new Button("完成订单");
 	private Button btnAccount = new Button("历史接单与入账情况");
-	//private Button btnall = new Button("总收入");
 	
 	
     //1
@@ -79,11 +78,7 @@ public class FrmMain extends JFrame implements ActionListener {
     //3
     //写在FrmCustomer
     //4 页面直接按钮
-    /*
-    private JMenuItem  menuItem_modifyPwd=new JMenuItem("密码修改");
-    private JMenuItem  menuItem_static1=new JMenuItem("统计1");
-    private JMenuItem  menuItem_register=new JMenuItem("注册");
-    */
+    
 
 	
     private Object tblTitle[]={"订单编号","用户","省","市","区","下单时间","要求送达","状态","接单骑手"};
@@ -143,11 +138,11 @@ public class FrmMain extends JFrame implements ActionListener {
 			this.menu_product.add(this.menuItem_prolist); this.menuItem_prolist.addActionListener(this);
 			this.menu_activity.add(this.menuItem_full); this.menuItem_full.addActionListener(this);
 			this.menu_activity.add(this.menuItem_coupon); this.menuItem_coupon.addActionListener(this);
-			this.menu_checkorder.add(this.menuItem_neworder); this.menuItem_neworder.addActionListener(this);
-			this.menu_checkorder.add(this.menuItem_okoreder); this.menuItem_okoreder.addActionListener(this);
+		//	this.menu_checkorder.add(this.menuItem_neworder); this.menuItem_neworder.addActionListener(this);
+		//	this.menu_checkorder.add(this.menuItem_okoreder); this.menuItem_okoreder.addActionListener(this);
 			 menubar_shop.add(menu_product);
 			 menubar_shop.add(menu_activity);
-			 menubar_shop.add(menu_checkorder);
+		//	 menubar_shop.add(menu_checkorder);
 			 this.setJMenuBar(menubar_shop);
 		}else if("顾客".equals(UserManager.currentUser.getType())) {
 			try {
@@ -200,24 +195,11 @@ public class FrmMain extends JFrame implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		
-		//管理员
+		
 		if(e.getSource()==this.menuItem_DeleteCus) {
 			FrmDeleteCus dlg=new FrmDeleteCus(this,"修改用户",true);
 			dlg.setVisible(true);
 		}
-	/*	else if(e.getSource()==this.menuItem_DeleteShop) {
-			FrmDeleteShop dlg=new FrmDeleteShop(this,"修改商家",true);
-			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_DeleteRider) {
-			FrmDeleteRider dlg=new FrmDeleteRider(this,"修改骑手",true);
-			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_DeleteOrder) {
-			FrmDeleteOrder dlg=new FrmDeleteOrder(this,"修改管理员",true);
-			dlg.setVisible(true);
-		}
-	*/	
 		//商家
 		else if(e.getSource()==this.menuItem_prolist){
 			FrmPro dlg=new FrmPro(this,"商品菜单",true);

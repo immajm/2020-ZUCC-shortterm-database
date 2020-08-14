@@ -117,7 +117,7 @@ public class FrmCustomer extends JDialog implements ActionListener{
 			int i=0;
 			while(rs.next()){
 				panel[i]=(JPanel) createPanel(rs.getString(1),i);
-				tabbedPane.addTab(rs.getString(2), new ImageIcon("image//pic3.png"),panel[i]);
+				tabbedPane.addTab(rs.getString(2), new ImageIcon("image//pic2.png"),panel[i]);
 				i++;
 			}
 	    }catch(SQLException e) {

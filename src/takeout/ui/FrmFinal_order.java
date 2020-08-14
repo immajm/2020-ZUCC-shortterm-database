@@ -159,7 +159,8 @@ public class FrmFinal_order extends JDialog implements ActionListener{
 			this.reloadAddTable();
 		}
 		else if(e.getSource()==this.btnFull) {
-			
+			Frm_showFull dlg=new Frm_showFull(this,"Ñ¡ÔñÂú¼õ",true);
+			dlg.setVisible(true);
 		}
 	}
    

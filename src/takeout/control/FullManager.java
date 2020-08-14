@@ -6,13 +6,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 import takeout.model.BeanFull;
+import takeout.model.BeanPossess;
 import takeout.model.BeanProduct;
+import takeout.ui.FrmCustomer;
 import takeout.util.BaseException;
 import takeout.util.BusinessException;
 import takeout.util.DBUtil;
 import takeout.util.DbException;
 
 public class FullManager {
+	public List<BeanFull> loadFull_cus()throws BaseException{
+		List<BeanFull> result=new ArrayList<BeanFull>();
+		Connection conn=null;
+		String shopid=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="select shop_id from product where pro_id in "
+				+ "(select pro_id from order_detail where order_id='"+FrmCustomer.currentorderid+"')";
+			java.sql.Statement st=conn.createStatement();
+			java.sql.ResultSet rs=st.executeQuery(sql);
+			while(rs.next()){
+				shopid=rs.getString(1);//…Ãº“±‡∫≈
+			}
+			rs.close();
+			st.close();
+				
+			sql="select full_id,shop_id,full_demand,full_reduction,tag"
+					+ " from full where shop_id='"+shopid+"'";
+			st=conn.createStatement();
+			rs=st.executeQuery(sql);
+			while(rs.next()){
+				BeanFull u=new BeanFull();
+				u.setFull_id(rs.getString(1));
+				u.setShop_id(rs.getString(2));
+				u.setFull_demand(rs.getDouble(3));
+				u.setFull_reduction(rs.getDouble(4));
+				u.setTag(rs.getString(5));
+				result.add(u);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return result;
+	}
+	
 	public List<BeanFull> loadAllFull()throws BaseException{
 		List<BeanFull> result=new ArrayList<BeanFull>();
 		String id=UserManager.currentUser.getUser_id();

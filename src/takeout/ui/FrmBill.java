@@ -28,7 +28,7 @@ public class FrmBill extends JDialog {
 	private JPanel workPane = new JPanel();
 	private JLabel label1 = new JLabel("商品原价：");
 	private JLabel label11 = new JLabel(""+original_cost);
-	private JLabel label2 = new JLabel("单品优惠金额：");
+	private JLabel label2 = new JLabel("总优惠金额：");
 	private JLabel label22 = new JLabel(""+discount);
 	private JLabel label3 = new JLabel("实付金额：");
 	private JLabel label33 = new JLabel(""+final_cost);
@@ -42,9 +42,6 @@ public class FrmBill extends JDialog {
 		super(f, s, b);
 		workPane.add(label1);//原价
 		workPane.add(label11);
-		workPane.add(label2);//单品优惠
-		workPane.add(label22);
-		
 		
 		String state=null;//会员
 		Connection conn=null;
@@ -72,7 +69,12 @@ public class FrmBill extends JDialog {
 			JLabel label55 = new JLabel(""+FrmPossess.currentcoupon_discount);
 			workPane.add(label55);
 		}
-			
+		
+		if(Frm_showFull.currentfull!=null) {
+			workPane.add(label4);
+			JLabel label44 = new JLabel(""+Frm_showFull.currentfullreduction);
+			workPane.add(label44);
+		}
 			
 		String state1=null;//会员
 		Connection conn1=null;
@@ -94,6 +96,8 @@ public class FrmBill extends JDialog {
 			workPane.add(label66);
 		}
 		
+		workPane.add(label2);//单品优惠
+		workPane.add(label22);
 		
 		workPane.add(label3);
 		workPane.add(label33);

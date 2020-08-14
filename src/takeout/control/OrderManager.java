@@ -14,6 +14,7 @@ import takeout.model.BeanOrder_detail;
 import takeout.ui.FrmCustomer;
 import takeout.ui.FrmFinal_order;
 import takeout.ui.FrmPossess;
+import takeout.ui.Frm_showFull;
 import takeout.util.BaseException;
 import takeout.util.DBUtil;
 import takeout.util.DbException;
@@ -267,6 +268,41 @@ public class OrderManager {
 		return result;
 	}
 	
+	public void updatefullid()throws BaseException{
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="update order_all set full_id ='"+Frm_showFull.currentfull+"' "
+					+ " where order_id='"+FrmCustomer.currentorderid+"'";
+			java.sql.Statement st=conn.createStatement();
+			st.execute(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+	}
+	public double original() throws BaseException{
+		Connection conn=null;
+		double original_cost = 0;
+		double discount = 0;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="select single_quantity,single_cost,single_discount"
+				+ " from order_detail where order_id ='"+FrmCustomer.currentorderid+"'";
+			java.sql.Statement st=conn.createStatement();
+			java.sql.ResultSet rs=st.executeQuery(sql);
+			while(rs.next()){
+				original_cost+=rs.getInt(1)*rs.getDouble(2);//数量*单价
+				discount+=rs.getInt(1)*rs.getDouble(3);//数量*单品优惠
+			}
+			rs.close();
+			st.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		return original_cost-discount;
+	}
 	
 	public void createOrd_all() throws BaseException{//增加总订单，并判断是否可以送券
 		String order_id=FrmCustomer.currentorderid;
@@ -310,6 +346,9 @@ public class OrderManager {
 			if(FrmPossess.currentcoupon!=null)
 				discount+=FrmPossess.currentcoupon_discount;
 			//满减
+			if(Frm_showFull.currentfull!=null) {
+				discount+=Frm_showFull.currentfullreduction;
+			}
 			
 			//会员打折
 			String state=null;
